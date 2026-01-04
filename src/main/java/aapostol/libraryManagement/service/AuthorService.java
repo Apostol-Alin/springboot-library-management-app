@@ -13,4 +13,5 @@ public interface AuthorService {
     public Author addAuthor(Author author);
     public Author updateAuthorBiography(Long id, String biography);
     public Author getAuthorById(Long id);
+    public void deleteAuthorById(Long id);
 }

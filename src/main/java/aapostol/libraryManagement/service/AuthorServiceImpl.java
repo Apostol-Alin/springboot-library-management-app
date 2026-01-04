@@ -52,4 +52,15 @@ public class AuthorServiceImpl implements AuthorService {
         }
         throw new IllegalArgumentException("Author with ID " + id + " not found.");
     }
+
+    @Override
+    public void deleteAuthorById(Long id) {
+        Optional<Author> author = authorRepository.findById(id);
+        if (author.isPresent()) {
+            authorRepository.deleteById(id);
+        }
+        else {
+            throw new IllegalArgumentException("Author with ID " + id + " not found.");
+        }
+    }
 }
