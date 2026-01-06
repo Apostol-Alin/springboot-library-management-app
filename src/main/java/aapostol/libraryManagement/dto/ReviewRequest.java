@@ -1,63 +1,47 @@
 package aapostol.libraryManagement.dto;
 
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class ReviewRequest {
     @NotNull(message = "Book ID cannot be null")
-    private Long bookId;
+    private Long book_id;
 
     @NotNull(message = "Client ID cannot be null")
-    private Long clientId;
-
-    @NotNull(message = "Rating cannot be null")
-    @Min(value = 1, message = "Rating must be at least 1")
-    @Max(value = 5, message = "Rating must be at most 5")
-    private Integer rating;
+    private Long client_id;
 
     @Size(max = 511, message = "Review text must be less than 512 characters")
-    private String reviewText;
+    private String review_text;
 
     public ReviewRequest() {}
 
-    public ReviewRequest(Long bookId, Long clientId, Integer rating, String reviewText) {
-        this.bookId = bookId;
-        this.clientId = clientId;
-        this.rating = rating;
-        this.reviewText = reviewText;
+    public ReviewRequest(Long book_id, Long client_id, Integer rating, String review_text) {
+        this.book_id = book_id;
+        this.client_id = client_id;
+        this.review_text = review_text;
     }
 
     public Long getBookId() {
-        return bookId;
+        return book_id;
     }
 
     public Long getClientId() {
-        return clientId;
-    }
-
-    public Integer getRating() {
-        return rating;
+        return client_id;
     }
 
     public String getReviewText() {
-        return reviewText;
+        return review_text;
     }
 
-    public void setBookId(Long bookId) {
-        this.bookId = bookId;
+    public void setBookId(Long book_id) {
+        this.book_id = book_id;
     }
 
-    public void setClientId(Long clientId) {
-        this.clientId = clientId;
+    public void setClientId(Long client_id) {
+        this.client_id = client_id;
     }
 
-    public void setRating(Integer rating) {
-        this.rating = rating;
-    }
-
-    public void setReviewText(String reviewText) {
-        this.reviewText = reviewText;
+    public void setReviewText(String review_text) {
+        this.review_text = review_text;
     }
 }

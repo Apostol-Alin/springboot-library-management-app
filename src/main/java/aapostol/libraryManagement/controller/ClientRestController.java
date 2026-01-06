@@ -1,5 +1,6 @@
 package aapostol.libraryManagement.controller;
 
+import java.net.URI;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aapostol.libraryManagement.dto.ClientRequest;
+import aapostol.libraryManagement.dto.ReviewRequest;
 import aapostol.libraryManagement.json.Client;
+import aapostol.libraryManagement.json.Review;
 import aapostol.libraryManagement.mapper.ClientMapper;
+import aapostol.libraryManagement.mapper.ReviewMapper;
 import aapostol.libraryManagement.service.ClientService;
 import jakarta.validation.Valid;
 @RestController
@@ -27,6 +31,8 @@ public class ClientRestController {
     private ClientService clientService;
     @Autowired
     private ClientMapper clientMapper;
+    @Autowired
+    private ReviewMapper reviewMapper;
 
     @GetMapping
     public ResponseEntity<List<Client>> getAllClients(){
@@ -62,7 +68,7 @@ public class ClientRestController {
     public ResponseEntity<Client> addClient(@RequestBody @Valid ClientRequest clientRequest) {
         Client client = this.clientMapper.toEntity(clientRequest);
         Client savedClient = this.clientService.addClient(client);
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedClient);
+        return ResponseEntity.created(URI.create("/id?id=" + savedClient.getId())).body(savedClient);
     }
 
     @PatchMapping(value = "/phone")
@@ -76,5 +82,11 @@ public class ClientRestController {
     public ResponseEntity<Void> deleteClient(@RequestParam(value = "id") Long id) {
         this.clientService.deleteClient(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @GetMapping(value = "/reviews")
+    public ResponseEntity<List<Review>> getReviewsByClientId(@RequestParam(value = "client-id") Long id) {
+        List<Review> reviews = this.clientService.getReviewsByClientId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 }

@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import aapostol.libraryManagement.json.Client;
+import aapostol.libraryManagement.json.Review;
 import aapostol.libraryManagement.repository.JPAClientRepository;
+import aapostol.libraryManagement.repository.JPAReviewRepository;
 
 @Service
 public class ClientServiceImpl implements ClientService {
     @Autowired
     private JPAClientRepository clientRepository;
+    @Autowired
+    private JPAReviewRepository reviewRepository;
 
     @Override
     public List<Client> getAllClients() {
@@ -63,6 +67,36 @@ public class ClientServiceImpl implements ClientService {
         }
         else{
             throw new IllegalArgumentException("Client with ID " + id + " not found.");
+        }
+    }
+
+    @Override
+    public Review addReviewToClient(Review review) {
+        return reviewRepository.save(review);
+    }
+
+    @Override
+    public List<Review> getReviewsByClientId(Long clientId) {
+        Optional<Client> clientOpt = clientRepository.findById(clientId);
+        if (!clientOpt.isPresent()) {
+            throw new IllegalArgumentException("Client with ID " + clientId + " not found.");
+        }
+        return reviewRepository.findByClient_Id(clientId);
+    }
+
+    @Override
+    public Optional<Review> getReviewById(Long id) {
+        return reviewRepository.findById(id);
+    }
+
+    @Override
+    public void deleteReview(Long id) {
+        Optional<Review> review = reviewRepository.findById(id);
+        if (review.isPresent()) {
+            reviewRepository.deleteById(id);
+        }
+        else {
+            throw new IllegalArgumentException("Review with ID " + id + " not found.");
         }
     }
 }

@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import aapostol.libraryManagement.json.Author;
 import aapostol.libraryManagement.json.Book;
 import aapostol.libraryManagement.json.Category;
+import aapostol.libraryManagement.json.Review;
 import aapostol.libraryManagement.repository.JPAAuthorRepository;
 import aapostol.libraryManagement.repository.JPABookRepository;
 import aapostol.libraryManagement.repository.JPACategoryRepository;
+import aapostol.libraryManagement.repository.JPAReviewRepository;
 
 
 @Service
@@ -22,6 +24,8 @@ public class BookServiceImpl implements BookService{
     private JPAAuthorRepository authorRepository;
     @Autowired
     private JPACategoryRepository categoryRepository;
+    @Autowired
+    private JPAReviewRepository reviewRepository;
 
     @Override
     public List<Book> getAllBooks() {
@@ -100,5 +104,12 @@ public class BookServiceImpl implements BookService{
             }
         }
         throw new IllegalArgumentException("Category with ID " + categoryId + " is not associated with Book ID " + bookId + ".");
+    }
+
+    @Override
+    public List<Review> getReviewsByBookId(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found."));
+        return reviewRepository.findByBook_Id(bookId);
     }
 }

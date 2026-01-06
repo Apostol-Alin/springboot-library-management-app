@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import aapostol.libraryManagement.dto.BookRequest;
 import aapostol.libraryManagement.json.Book;
+import aapostol.libraryManagement.json.Review;
 import aapostol.libraryManagement.mapper.BookMapper;
 import aapostol.libraryManagement.service.BookService;
 import jakarta.validation.Valid;
@@ -87,5 +88,11 @@ public class BookRestController {
     public ResponseEntity<Book> removeCategoryFromBook(@RequestParam(value = "book-id") Long bookId, @RequestParam(value = "category-id") Long categoryId) {
         Book updatedBook = this.bookService.removeCategoryFromBook(bookId, categoryId);
         return ResponseEntity.status(HttpStatus.OK).body(updatedBook);
+    }
+
+    @GetMapping(value = "/reviews")
+    public ResponseEntity<List<Review>> getReviewsByBookId(@RequestParam(value = "book-id") Long id) {
+        List<Review> reviews = this.bookService.getReviewsByBookId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(reviews);
     }
 }

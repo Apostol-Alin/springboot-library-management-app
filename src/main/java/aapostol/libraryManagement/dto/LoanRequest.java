@@ -7,44 +7,44 @@ import jakarta.validation.constraints.NotNull;
 
 public class LoanRequest {
     @NotNull(message = "Book ID cannot be null")
-    private Long bookId;
+    private Long book_id;
 
     @NotNull(message = "Client ID cannot be null")
-    private Long clientId;
+    private Long client_id;
 
     @NotNull(message = "Due date cannot be null")
     @Future(message = "Due date must be in the future")
-    private Date dueDate;
+    private Date due_date;
 
     public LoanRequest() {}
 
-    public LoanRequest(Long bookId, Long clientId, Date dueDate) {
-        this.bookId = bookId;
-        this.clientId = clientId;
-        this.dueDate = dueDate;
+    public LoanRequest(Long book_id, Long client_id, Date due_date) {
+        this.book_id = book_id;
+        this.client_id = client_id;
+        this.due_date = due_date;
     }
 
     public Long getBookId() {
-        return bookId;
+        return book_id;
     }
 
     public Long getClientId() {
-        return clientId;
+        return client_id;
     }
 
     public Date getDueDate() {
-        return dueDate;
+        return due_date;
     }
 
     public void setBookId(Long bookId) {
-        this.bookId = bookId;
+        this.book_id = bookId;
     }
 
     public void setClientId(Long clientId) {
-        this.clientId = clientId;
+        this.client_id = clientId;
     }
 
     public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
+        this.due_date = dueDate;
     }
 }

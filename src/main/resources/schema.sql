@@ -149,8 +149,13 @@ INSERT INTO Loans (book_id, client_id, borrow_date, due_date, return_date) VALUE
 (9, 5, '2025-12-05 13:20:00', '2025-12-19', '2025-12-18'),
 
 -- Overdue returned loans
-(10, 1, '2025-11-30 16:00:00', '2025-12-14', '2025-12-12'),
+(10, 1, '2025-11-30 16:00:00', '2025-12-14', '2025-12-19'),
 (11, 3, '2025-11-25 10:45:00', '2025-12-09', '2025-12-29');
+
+-- Update Book Availability for books with active loans (return_date IS NULL)
+UPDATE Books SET available_copies = available_copies - 1 WHERE Id = 1;  -- A Game of Thrones
+UPDATE Books SET available_copies = available_copies - 1 WHERE Id = 4;  -- Harry Potter 1
+UPDATE Books SET available_copies = available_copies - 1 WHERE Id = 7;  -- Foundation
 
 -- Insert Reviews
 INSERT INTO Reviews (book_id, client_id, review_text) VALUES

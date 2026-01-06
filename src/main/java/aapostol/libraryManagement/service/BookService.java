@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import aapostol.libraryManagement.json.Book;
+import aapostol.libraryManagement.json.Review;
 
 @Service
 public interface BookService {
@@ -26,5 +27,7 @@ public interface BookService {
     Book addCategoryToBook(Long bookId, Long categoryId);
 
     Book removeCategoryFromBook(Long bookId, Long categoryId);
+
+    List<Review> getReviewsByBookId(Long bookId);
 
 }

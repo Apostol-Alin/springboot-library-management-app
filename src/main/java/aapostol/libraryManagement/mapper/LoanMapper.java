@@ -6,8 +6,11 @@ import aapostol.libraryManagement.json.Client;
 import aapostol.libraryManagement.dto.LoanRequest;
 import aapostol.libraryManagement.repository.JPAClientRepository;
 import aapostol.libraryManagement.repository.JPABookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class LoanMapper {
     @Autowired
     private JPABookRepository bookRepository;
