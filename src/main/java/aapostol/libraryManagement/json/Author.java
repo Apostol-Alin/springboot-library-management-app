@@ -2,8 +2,6 @@ package aapostol.libraryManagement.json;
 
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -11,6 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
@@ -19,16 +18,16 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @JsonProperty(access = JsonProperty.Access.READ_ONLY) // On POST/PUT requests, ignore this field
     private Long id;
 
     @Column(name = "Name", nullable = false, length = 255)
-    @NotBlank
-    @Size(max = 255)
+    @NotBlank(message = "Author name cannot be blank")
+    @NotNull(message = "Author name cannot be null")
+    @Size(max = 255, message = "Author name must be less than 256 characters")
     private String name;
 
     @Column(name = "Biography", nullable = true, length = 511)
-    @Size(max = 511)
+    @Size(max = 511, message = "Author biography must be less than 512 characters")
     private String biography;
 
     public Author(Long id, String name, String biography) {

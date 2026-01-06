@@ -1,0 +1,104 @@
+package aapostol.libraryManagement.service;
+
+import java.util.List;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import aapostol.libraryManagement.json.Author;
+import aapostol.libraryManagement.json.Book;
+import aapostol.libraryManagement.json.Category;
+import aapostol.libraryManagement.repository.JPAAuthorRepository;
+import aapostol.libraryManagement.repository.JPABookRepository;
+import aapostol.libraryManagement.repository.JPACategoryRepository;
+
+
+@Service
+public class BookServiceImpl implements BookService{
+    @Autowired
+    private JPABookRepository bookRepository;
+    @Autowired
+    private JPAAuthorRepository authorRepository;
+    @Autowired
+    private JPACategoryRepository categoryRepository;
+
+    @Override
+    public List<Book> getAllBooks() {
+        return bookRepository.findAll();
+    }
+
+    @Override
+    public Book getBookById(Long id) {
+        return bookRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Book> getBooksByTitle(String title) {
+        return bookRepository.findByTitleContainingIgnoreCase(title);
+    }
+
+    @Override
+    public List<Book> getBooksByAuthorName(String authorName) {
+        List<Author> authors = authorRepository.findByNameContainingIgnoreCase(authorName);
+        if (authors.isEmpty()) {
+            return List.of();
+        }
+        List<Long> authorIds = authors.stream().map(Author::getId).toList();
+        return bookRepository.findByAuthor_idIn(authorIds);
+    }
+
+    @Override
+    public List<Book> getBooksByAuthorId(Long authorId) {
+        Optional<Author> author = authorRepository.findById(authorId);
+        if (!author.isPresent()){
+            throw new IllegalArgumentException("Author with ID " + authorId + " not found.");
+        }
+        return bookRepository.findByAuthor_id(authorId);
+    }
+
+    @Override
+    public void deleteBookById(Long id) {
+        Optional<Book> book = bookRepository.findById(id);
+        if (book.isPresent()) {
+            bookRepository.deleteById(id);
+        } else {
+            throw new IllegalArgumentException("Book with ID " + id + " not found.");
+        }
+    }
+
+    @Override
+    public Book addBook(Book book){
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public Book addCategoryToBook(Long bookId, Long categoryId) {
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found."));
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new IllegalArgumentException("Category with ID " + categoryId + " not found."));
+        for (Category cat : book.getCategories()) {
+            if (cat.getId().equals(categoryId)) {
+                throw new IllegalArgumentException("Category with ID " + categoryId + " is already associated with Book ID " + bookId + ".");
+            }
+        }
+        book.getCategories().add(category);
+        return bookRepository.save(book);
+    }
+
+    @Override
+    public Book removeCategoryFromBook(Long bookId, Long categoryId) {
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found."));
+        Category category = categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new IllegalArgumentException("Category with ID " + categoryId + " not found."));
+        for (Category cat : book.getCategories()) {
+            if (cat.getId().equals(categoryId)) {
+                book.getCategories().remove(cat);
+                return bookRepository.save(book);
+            }
+        }
+        throw new IllegalArgumentException("Category with ID " + categoryId + " is not associated with Book ID " + bookId + ".");
+    }
+}

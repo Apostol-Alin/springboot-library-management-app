@@ -1,5 +1,6 @@
 package aapostol.libraryManagement.controller;
 
+import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +29,6 @@ public class AuthorRestController {
     @GetMapping
     public ResponseEntity<List<Author>> getAllAuthors(){
         List<Author> authorList = this.authorService.getAllAuthors();
-        if (authorList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
         return ResponseEntity.status(HttpStatus.OK).body(authorList);
     }
 
@@ -52,16 +50,13 @@ public class AuthorRestController {
     @GetMapping(value = "/name")
     public ResponseEntity<List<Author>> searchAuthorsByName(@RequestParam(value = "name") @Size(max = 255) String name) {
         List<Author> authorList = this.authorService.searchAuthorsByName(name);
-        if (authorList.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
         return ResponseEntity.status(HttpStatus.OK).body(authorList);
     }
 
     @PostMapping(value = "/add")
     public ResponseEntity<Author> addAuthor(@RequestBody @Valid Author author) {
         Author addedAuthor = this.authorService.addAuthor(author);
-        return ResponseEntity.status(HttpStatus.CREATED).body(addedAuthor);
+        return ResponseEntity.created(URI.create("/id?id=" + addedAuthor.getId())).body(addedAuthor);
     }
 
     @PatchMapping(value = "/biography")
