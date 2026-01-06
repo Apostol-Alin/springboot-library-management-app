@@ -1,6 +1,7 @@
 package aapostol.libraryManagement.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import aapostol.libraryManagement.json.Book;
 import aapostol.libraryManagement.json.Category;
 import aapostol.libraryManagement.repository.JPABookRepository;
 import aapostol.libraryManagement.repository.JPACategoryRepository;
+import aapostol.libraryManagement.exception.*;;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
@@ -36,7 +38,7 @@ public class CategoryServiceImpl implements CategoryService {
         // The unique constraint doesn't check for case-insensitivity, so we have to do it manually
         List<Category> existingCategories = categoryRepository.findByNameIgnoreCase(category.getName());
         if (!existingCategories.isEmpty()) {
-            throw new IllegalArgumentException("Category with name '" + category.getName() + "' already exists.");
+            throw new DuplicateResourceException("Category with name '" + category.getName() + "' already exists.");
         }
         return categoryRepository.save(category);
     }
@@ -48,7 +50,7 @@ public class CategoryServiceImpl implements CategoryService {
             categoryRepository.deleteById(id);
         }
         else {
-            throw new IllegalArgumentException("Category with ID " + id + " not found.");
+            throw new NoSuchElementException("Category with ID " + id + " not found.");
         }
     }
 
@@ -61,7 +63,7 @@ public class CategoryServiceImpl implements CategoryService {
             return categoryRepository.save(updatedCategory);
         }
         else {
-            throw new IllegalArgumentException("Category with ID " + id + " not found.");
+            throw new NoSuchElementException("Category with ID " + id + " not found.");
         }
     }
 
@@ -69,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<Book> getCategoryBooks(Long categoryId) {
         Optional<Category> category = categoryRepository.findById(categoryId);
         if (!category.isPresent()) {
-            throw new IllegalArgumentException("Category with ID " + categoryId + " not found.");
+            throw new NoSuchElementException("Category with ID " + categoryId + " not found.");
         }
         return bookRepository.findByCategoriesId(categoryId);
     }

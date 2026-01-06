@@ -4,8 +4,6 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 
 @Entity
@@ -39,6 +38,7 @@ public class Loan {
 
     @Column(name = "due_date", nullable = false)
     @NotNull(message = "Due date cannot be null")
+    @Future(message = "Due date must be in the future")
     private Date due_date;
 
     @Column(name = "return_date")

@@ -1,6 +1,7 @@
 package aapostol.libraryManagement.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import aapostol.libraryManagement.json.Author;
 import aapostol.libraryManagement.repository.JPAAuthorRepository;
+import aapostol.libraryManagement.exception.*;;
 
 @Service
 public class AuthorServiceImpl implements AuthorService {
@@ -36,7 +38,7 @@ public class AuthorServiceImpl implements AuthorService {
         // Check for existing author with the same name (case-insensitive)
         List<Author> existingAuthors = authorRepository.findByNameIgnoreCase(author.getName());
         if (!existingAuthors.isEmpty()) {
-            throw new IllegalArgumentException("Author with name '" + author.getName() + "' already exists.");
+            throw new DuplicateResourceException("Author with name '" + author.getName() + "' already exists.");
         }
 
         return authorRepository.save(author);
@@ -50,7 +52,7 @@ public class AuthorServiceImpl implements AuthorService {
             updatedAuthor.setBiography(biography);
             return authorRepository.save(updatedAuthor);
         }
-        throw new IllegalArgumentException("Author with ID " + id + " not found.");
+        throw new NoSuchElementException("Author with ID " + id + " not found.");
     }
 
     @Override
@@ -60,7 +62,7 @@ public class AuthorServiceImpl implements AuthorService {
             authorRepository.deleteById(id);
         }
         else {
-            throw new IllegalArgumentException("Author with ID " + id + " not found.");
+            throw new NoSuchElementException("Author with ID " + id + " not found.");
         }
     }
 }

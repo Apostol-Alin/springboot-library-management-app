@@ -1,6 +1,7 @@
 package aapostol.libraryManagement.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import aapostol.libraryManagement.json.Client;
 import aapostol.libraryManagement.json.Review;
 import aapostol.libraryManagement.repository.JPAClientRepository;
 import aapostol.libraryManagement.repository.JPAReviewRepository;
+import aapostol.libraryManagement.exception.*;;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -43,7 +45,7 @@ public class ClientServiceImpl implements ClientService {
         // Check for existing client with the same phone number
         Optional<Client> existingClient = clientRepository.findByPhone(client.getPhone());
         if (existingClient.isPresent()) {
-            throw new IllegalArgumentException("Client with phone number '" + client.getPhone() + "' already exists.");
+            throw new DuplicateResourceException("Client with phone number '" + client.getPhone() + "' already exists.");
         }
         return clientRepository.save(client);
     }
@@ -56,7 +58,7 @@ public class ClientServiceImpl implements ClientService {
             client.setPhone(newPhone);
             return clientRepository.save(client);
         }
-        throw new IllegalArgumentException("Client with ID " + id + " not found.");
+        throw new NoSuchElementException("Client with ID " + id + " not found.");
     }
 
     @Override
@@ -66,7 +68,7 @@ public class ClientServiceImpl implements ClientService {
             clientRepository.deleteById(id);
         }
         else{
-            throw new IllegalArgumentException("Client with ID " + id + " not found.");
+            throw new NoSuchElementException("Client with ID " + id + " not found.");
         }
     }
 
@@ -79,7 +81,7 @@ public class ClientServiceImpl implements ClientService {
     public List<Review> getReviewsByClientId(Long clientId) {
         Optional<Client> clientOpt = clientRepository.findById(clientId);
         if (!clientOpt.isPresent()) {
-            throw new IllegalArgumentException("Client with ID " + clientId + " not found.");
+            throw new NoSuchElementException("Client with ID " + clientId + " not found.");
         }
         return reviewRepository.findByClient_Id(clientId);
     }
@@ -96,7 +98,7 @@ public class ClientServiceImpl implements ClientService {
             reviewRepository.deleteById(id);
         }
         else {
-            throw new IllegalArgumentException("Review with ID " + id + " not found.");
+            throw new NoSuchElementException("Review with ID " + id + " not found.");
         }
     }
 }

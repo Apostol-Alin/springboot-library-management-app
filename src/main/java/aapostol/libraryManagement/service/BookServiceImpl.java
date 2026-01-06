@@ -1,6 +1,7 @@
 package aapostol.libraryManagement.service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import aapostol.libraryManagement.repository.JPAAuthorRepository;
 import aapostol.libraryManagement.repository.JPABookRepository;
 import aapostol.libraryManagement.repository.JPACategoryRepository;
 import aapostol.libraryManagement.repository.JPAReviewRepository;
+import aapostol.libraryManagement.exception.*;;
 
 
 @Service
@@ -56,7 +58,7 @@ public class BookServiceImpl implements BookService{
     public List<Book> getBooksByAuthorId(Long authorId) {
         Optional<Author> author = authorRepository.findById(authorId);
         if (!author.isPresent()){
-            throw new IllegalArgumentException("Author with ID " + authorId + " not found.");
+            throw new NoSuchElementException("Author with ID " + authorId + " not found.");
         }
         return bookRepository.findByAuthor_id(authorId);
     }
@@ -67,7 +69,7 @@ public class BookServiceImpl implements BookService{
         if (book.isPresent()) {
             bookRepository.deleteById(id);
         } else {
-            throw new IllegalArgumentException("Book with ID " + id + " not found.");
+            throw new NoSuchElementException("Book with ID " + id + " not found.");
         }
     }
 
@@ -79,12 +81,12 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book addCategoryToBook(Long bookId, Long categoryId) {
         Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found."));
+            .orElseThrow(() -> new NoSuchElementException("Book with ID " + bookId + " not found."));
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new IllegalArgumentException("Category with ID " + categoryId + " not found."));
+            .orElseThrow(() -> new NoSuchElementException("Category with ID " + categoryId + " not found."));
         for (Category cat : book.getCategories()) {
             if (cat.getId().equals(categoryId)) {
-                throw new IllegalArgumentException("Category with ID " + categoryId + " is already associated with Book ID " + bookId + ".");
+                throw new DuplicateResourceException("Category with ID " + categoryId + " is already associated with Book ID " + bookId + ".");
             }
         }
         book.getCategories().add(category);
@@ -94,22 +96,22 @@ public class BookServiceImpl implements BookService{
     @Override
     public Book removeCategoryFromBook(Long bookId, Long categoryId) {
         Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found."));
+            .orElseThrow(() -> new NoSuchElementException("Book with ID " + bookId + " not found."));
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new IllegalArgumentException("Category with ID " + categoryId + " not found."));
+            .orElseThrow(() -> new NoSuchElementException("Category with ID " + categoryId + " not found."));
         for (Category cat : book.getCategories()) {
             if (cat.getId().equals(categoryId)) {
                 book.getCategories().remove(cat);
                 return bookRepository.save(book);
             }
         }
-        throw new IllegalArgumentException("Category with ID " + categoryId + " is not associated with Book ID " + bookId + ".");
+        throw new DuplicateResourceException("Category with ID " + categoryId + " is not associated with Book ID " + bookId + ".");
     }
 
     @Override
     public List<Review> getReviewsByBookId(Long bookId) {
         Book book = bookRepository.findById(bookId)
-            .orElseThrow(() -> new IllegalArgumentException("Book with ID " + bookId + " not found."));
+            .orElseThrow(() -> new NoSuchElementException("Book with ID " + bookId + " not found."));
         return reviewRepository.findByBook_Id(bookId);
     }
 }

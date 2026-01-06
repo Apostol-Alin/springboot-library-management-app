@@ -1,5 +1,7 @@
 package aapostol.libraryManagement.mapper;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +18,7 @@ public class BookMapper {
     public Book toEntity(BookRequest bookRequest) {
         Book book = new Book();
         Author author = authorRepository.findById(bookRequest.getAuthorId())
-                .orElseThrow(() -> new IllegalArgumentException("Author with ID " + bookRequest.getAuthorId() + " not found."));
+                .orElseThrow(() -> new NoSuchElementException("Author with ID " + bookRequest.getAuthorId() + " not found."));
         book.setTitle(bookRequest.getTitle());
         book.setDescription(bookRequest.getDescription());
         book.setPublicationDate(bookRequest.getPublicationDate());

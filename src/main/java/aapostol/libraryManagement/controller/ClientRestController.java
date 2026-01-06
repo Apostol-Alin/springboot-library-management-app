@@ -2,7 +2,6 @@ package aapostol.libraryManagement.controller;
 
 import java.net.URI;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import aapostol.libraryManagement.dto.ClientRequest;
-import aapostol.libraryManagement.dto.ReviewRequest;
 import aapostol.libraryManagement.json.Client;
 import aapostol.libraryManagement.json.Review;
 import aapostol.libraryManagement.mapper.ClientMapper;
-import aapostol.libraryManagement.mapper.ReviewMapper;
 import aapostol.libraryManagement.service.ClientService;
 import jakarta.validation.Valid;
 @RestController
@@ -31,8 +28,6 @@ public class ClientRestController {
     private ClientService clientService;
     @Autowired
     private ClientMapper clientMapper;
-    @Autowired
-    private ReviewMapper reviewMapper;
 
     @GetMapping
     public ResponseEntity<List<Client>> getAllClients(){

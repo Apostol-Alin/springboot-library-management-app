@@ -7,6 +7,8 @@ import aapostol.libraryManagement.dto.LoanRequest;
 import aapostol.libraryManagement.repository.JPAClientRepository;
 import aapostol.libraryManagement.repository.JPABookRepository;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +23,9 @@ public class LoanMapper {
     public Loan toEntity(LoanRequest loanRequest) {
         Loan loan = new Loan();
         Book book = bookRepository.findById(loanRequest.getBookId())
-                .orElseThrow(() -> new IllegalArgumentException("Book with ID " + loanRequest.getBookId() + " not found."));
+                .orElseThrow(() -> new NoSuchElementException("Book with ID " + loanRequest.getBookId() + " not found."));
         Client client = clientRepository.findById(loanRequest.getClientId())
-                .orElseThrow(() -> new IllegalArgumentException("Client with ID " + loanRequest.getClientId() + " not found."));
+                .orElseThrow(() -> new NoSuchElementException("Client with ID " + loanRequest.getClientId() + " not found."));
         loan.setBook(book);
         loan.setClient(client);
         loan.setBorrowDate(new java.util.Date());
