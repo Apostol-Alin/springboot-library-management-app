@@ -50,6 +50,13 @@ public class Client {
         this.registration_date = registration_date;
     }
 
+    public Client(Long id, String name, String phone, Date registration_date) {
+        this.id = id;
+        this.name = name;
+        this.phone = phone;
+        this.registration_date = registration_date;
+    }
+
     public Long getId() {
         return id;
     }

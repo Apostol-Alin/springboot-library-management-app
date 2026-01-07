@@ -1,6 +1,7 @@
 package aapostol.libraryManagement.json;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Set;
 
 import org.json.JSONObject;
@@ -75,7 +76,7 @@ public class Book {
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id"))
     @Schema(description = "Categories associated with this Book")
-    private Set<Category> categories;
+    private List<Category> categories;
 
     public Book(){}
     public Book(Long id, String title, String description, LocalDate publication_date, Integer total_copies, Integer available_copies, Author author) {
@@ -108,7 +109,7 @@ public class Book {
     public Author getAuthor() {
         return author;
     }
-    public Set<Category> getCategories(){
+    public List<Category> getCategories(){
         return categories;
     }
     public void setTitle(String title) {
@@ -128,6 +129,9 @@ public class Book {
     }
     public void setAuthor(Author author) {
         this.author = author;
+    }
+    public void setCategories(List<Category> categories){
+        this.categories = categories;
     }
     @Override
     public String toString() {

@@ -41,4 +41,5 @@ public class AuthorRequest {
     public void setBiography(String biography) {
         this.biography = biography;
     }
+
 }
