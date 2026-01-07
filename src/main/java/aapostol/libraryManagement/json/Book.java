@@ -1,10 +1,11 @@
 package aapostol.libraryManagement.json;
 
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Set;
 
 import org.json.JSONObject;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,31 +28,38 @@ import jakarta.validation.constraints.Size;
 public class Book {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier of the book", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Column(name = "Title", nullable = false, length = 255, unique = true)
     @NotBlank(message = "Book title cannot be blank")
     @NotNull(message = "Book title cannot be null")
     @Size(max = 255, message = "Book title must be less than 256 characters")
+    @Schema(description = "Title of the book", example = "Harry Potter and the Philosopher's Stone")
     private String title;
 
     @Column(name = "Description", nullable = true, length = 511)
     @Size(max = 511, message = "Book description must be less than 512 characters")
+    @Schema(description = "Description of the book", example = "A young wizard's journey begins.")
     private String description;
 
     @Column(name = "publication_date", nullable = true)
     @PastOrPresent(message = "Publication date cannot be in the future")
-    private Date publication_date;
+    @Schema(description = "Publication date of the book. Format must be yyyy-MM-dd", example = "1997-06-26")
+    private LocalDate publication_date;
 
     @Column(name = "total_copies", nullable = false)
     @Positive(message = "Total copies must be a positive integer")
+    @Schema(description = "Total number of copies of the book in the library.", example = "10")
     private Integer total_copies;
 
     @Column(name = "available_copies", nullable = false)
     @Positive(message = "Available copies must be a positive integer")
+    @Schema(description = "Number of copies of the book currently available in the library.", example = "7")
     private Integer available_copies;
 
     @AssertTrue(message = "Available copies must not exceed total copies")
+    @Schema(hidden = true)
     public boolean isavailable_copiesValid() {
         return available_copies <= total_copies;
     }
@@ -59,16 +67,18 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "AuthorId", nullable = false)
     @NotNull(message = "Author cannot be null")
+    @Schema(description = "Author of the book")
     private Author author;
 
     @ManyToMany
     @JoinTable(name = "Book_Categories",
         joinColumns = @JoinColumn(name = "book_id"),
         inverseJoinColumns = @JoinColumn(name = "category_id"))
+    @Schema(description = "Categories associated with this Book")
     private Set<Category> categories;
 
     public Book(){}
-    public Book(Long id, String title, String description, Date publication_date, Integer total_copies, Integer available_copies, Author author) {
+    public Book(Long id, String title, String description, LocalDate publication_date, Integer total_copies, Integer available_copies, Author author) {
         this.id = id;
         this.title = title;
         this.description = description;
@@ -86,7 +96,7 @@ public class Book {
     public String getDescription() {
         return description;
     }
-    public Date getPublicationDate() {
+    public LocalDate getPublicationDate() {
         return publication_date;
     }
     public Integer getTotalCopies() {
@@ -107,7 +117,7 @@ public class Book {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setPublicationDate(Date publication_date) {
+    public void setPublicationDate(LocalDate publication_date) {
         this.publication_date = publication_date;
     }
     public void setTotalCopies(Integer total_copies) {

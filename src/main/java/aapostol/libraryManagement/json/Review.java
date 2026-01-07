@@ -4,6 +4,7 @@ import java.util.Date;
 
 import org.json.JSONObject;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,24 +21,29 @@ import jakarta.validation.constraints.Size;
 public class Review {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier of the review", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     @NotNull(message = "Book cannot be null")
+    @Schema(description = "Book being reviewed")
     private Book book;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     @NotNull(message = "Client cannot be null")
+    @Schema(description = "Client who wrote the review")
     private Client client;
 
     @Column(name = "review_text", nullable = true, length = 511)
     @Size(max = 511, message = "Review text must be less than 512 characters")
+    @Schema(description = "Text of the review", example = "Great book, highly recommend!")
     private String review_text;
 
     @Column(name = "review_date", nullable = false)
     @NotNull(message = "Review date cannot be null")
+    @Schema(description = "Date when the review was written", example = "2023-01-01T12:00:00Z", accessMode = Schema.AccessMode.READ_ONLY)
     private Date review_date;
 
     public Review() {}

@@ -105,7 +105,7 @@ public class BookServiceImpl implements BookService{
                 return bookRepository.save(book);
             }
         }
-        throw new DuplicateResourceException("Category with ID " + categoryId + " is not associated with Book ID " + bookId + ".");
+        throw new NoSuchElementException("Category with ID " + categoryId + " is not associated with Book ID " + bookId + ".");
     }
 
     @Override

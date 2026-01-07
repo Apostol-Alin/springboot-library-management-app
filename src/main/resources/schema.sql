@@ -22,7 +22,7 @@ CREATE TABLE Books (
     Id BIGINT AUTO_INCREMENT PRIMARY KEY,
     Title VARCHAR(255) NOT NULL,
     Description VARCHAR(511),
-    publication_date TIMESTAMP,
+    publication_date DATE,
     author_id BIGINT NOT NULL,
     total_copies INT NOT NULL CHECK (total_copies > 0),
     available_copies INT NOT NULL CHECK (available_copies > 0),
@@ -57,10 +57,9 @@ CREATE TABLE Loans (
     Id BIGINT AUTO_INCREMENT PRIMARY KEY,
     book_id BIGINT NOT NULL,
     client_id BIGINT NOT NULL,
-    borrow_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    due_date TIMESTAMP NOT NULL,
-    return_date TIMESTAMP,
-    CONSTRAINT UniqueBookClientLoan UNIQUE (book_id, client_id),
+    borrow_date DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    due_date DATE NOT NULL,
+    return_date DATE,
     CONSTRAINT FkLoansBooks FOREIGN KEY (book_id) REFERENCES Books(Id) ON DELETE CASCADE,
     CONSTRAINT FkLoansClients FOREIGN KEY (client_id) REFERENCES Clients(Id) ON DELETE CASCADE
 );
@@ -138,19 +137,19 @@ INSERT INTO Clients (Name, Phone) VALUES
 -- Insert Loans (some active, some returned, simulating history)
 INSERT INTO Loans (book_id, client_id, borrow_date, due_date, return_date) VALUES
 -- Active loans
-(1, 1, '2026-01-02 10:00:00', '2026-01-16', NULL),
-(4, 2, '2026-01-03 14:30:00', '2026-01-17', NULL),
-(7, 3, '2026-01-04 09:15:00', '2026-01-18', NULL),
+(1, 1, '2026-01-02', '2026-01-16', NULL),
+(4, 2, '2026-01-03', '2026-01-17', NULL),
+(7, 3, '2026-01-04', '2026-01-18', NULL),
 
 -- Returned loans
-(1, 2, '2025-12-20 11:00:00', '2026-01-03', '2026-01-02'),
-(4, 1, '2025-12-15 15:45:00', '2025-12-29', '2025-12-28'),
-(8, 4, '2025-12-10 10:30:00', '2025-12-24', '2025-12-23'),
-(9, 5, '2025-12-05 13:20:00', '2025-12-19', '2025-12-18'),
+(1, 2, '2025-12-20', '2026-01-03', '2026-01-02'),
+(4, 1, '2025-12-15', '2025-12-29', '2025-12-28'),
+(8, 4, '2025-12-10', '2025-12-24', '2025-12-23'),
+(9, 5, '2025-12-05', '2025-12-19', '2025-12-18'),
 
 -- Overdue returned loans
-(10, 1, '2025-11-30 16:00:00', '2025-12-14', '2025-12-19'),
-(11, 3, '2025-11-25 10:45:00', '2025-12-09', '2025-12-29');
+(10, 1, '2025-11-30', '2025-12-14', '2025-12-19'),
+(11, 3, '2025-11-25', '2025-12-09', '2025-12-29');
 
 -- Update Book Availability for books with active loans (return_date IS NULL)
 UPDATE Books SET available_copies = available_copies - 1 WHERE Id = 1;  -- A Game of Thrones

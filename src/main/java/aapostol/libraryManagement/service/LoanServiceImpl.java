@@ -16,6 +16,7 @@ import aapostol.libraryManagement.repository.JPALoanRepository;
 import aapostol.libraryManagement.repository.JPABookRepository;
 import aapostol.libraryManagement.repository.JPAClientRepository;
 import aapostol.libraryManagement.exception.*;
+import java.time.LocalDate;
 
 @Service
 public class LoanServiceImpl implements LoanService{
@@ -38,7 +39,7 @@ public class LoanServiceImpl implements LoanService{
     public Loan addLoan(Loan loan) {
         Book book = loan.getBook();
         Optional<Loan> existingLoan = loanRepository.findByClient_IdAndBook_Id(loan.getClient().getId(), book.getId());
-        if (existingLoan.isPresent()){
+        if (existingLoan.isPresent() && existingLoan.get().getReturnDate() == null) {
             throw new DuplicateResourceException("Client with ID " + loan.getClient().getId() + " already has an active loan for the book with ID: " + book.getId());
         }
         if (book.getAvailableCopies() <= 0) {
@@ -51,9 +52,13 @@ public class LoanServiceImpl implements LoanService{
 
     @Override
     @Transactional(propagation = Propagation.REQUIRED)
-    public Loan updateLoanReturnDate(Long id, java.util.Date returnDate) {
+    public Loan updateLoanReturnDate(Long id, LocalDate returnDate) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Loan with ID " + id + " not found."));
+
+        if (loan.getReturnDate() != null) {
+            throw new BusinessRuleException("Loan with ID " + id + " has already been returned on " + loan.getReturnDate() + ".");
+        }
         loan.setReturnDate(returnDate);
 
         // Increase available copies when the book is returned
@@ -65,7 +70,7 @@ public class LoanServiceImpl implements LoanService{
     }
 
     @Override
-    public Loan updateLoanDueDate(Long id, java.util.Date dueDate) {
+    public Loan updateLoanDueDate(Long id, LocalDate dueDate) {
         Loan loan = loanRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Loan with ID " + id + " not found."));
         loan.setDueDate(dueDate);
@@ -109,10 +114,9 @@ public class LoanServiceImpl implements LoanService{
     public List<Loan> getLoansByClientIdOverdue(Long clientId) {
         Client client = clientRepository.findById(clientId)
                 .orElseThrow(() -> new NoSuchElementException("Client with ID " + clientId + " not found."));
-        java.util.Date currentDate = new java.util.Date();
         // Overdue loans are those with dueDate before current date and no returnDate or those who were returned late
         return loanRepository.findByClient_Id(clientId).stream()
-                .filter(loan -> (loan.getDueDate().before(currentDate) && loan.getReturnDate() == null) || (loan.getReturnDate() != null && loan.getDueDate().before(loan.getReturnDate())))
+                .filter(loan -> (loan.getDueDate().isBefore(LocalDate.now()) && loan.getReturnDate() == null) || (loan.getReturnDate() != null && loan.getDueDate().isBefore(loan.getReturnDate())))
                 .toList();
     }
 

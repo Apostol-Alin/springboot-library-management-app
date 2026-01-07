@@ -28,7 +28,7 @@ public class LoanMapper {
                 .orElseThrow(() -> new NoSuchElementException("Client with ID " + loanRequest.getClientId() + " not found."));
         loan.setBook(book);
         loan.setClient(client);
-        loan.setBorrowDate(new java.util.Date());
+        loan.setBorrowDate(java.time.LocalDate.now());
         loan.setDueDate(loanRequest.getDueDate());
         return loan;
     }

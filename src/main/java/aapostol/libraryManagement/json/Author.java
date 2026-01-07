@@ -2,6 +2,7 @@ package aapostol.libraryManagement.json;
 
 import org.json.JSONObject;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -18,16 +19,19 @@ public class Author {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier of the author", example = "1", accessMode = Schema.AccessMode.READ_ONLY)
     private Long id;
 
     @Column(name = "Name", nullable = false, length = 255)
     @NotBlank(message = "Author name cannot be blank")
     @NotNull(message = "Author name cannot be null")
     @Size(max = 255, message = "Author name must be less than 256 characters")
+    @Schema(description = "Name of the author", example = "J.K. Rowling")
     private String name;
 
     @Column(name = "Biography", nullable = true, length = 511)
     @Size(max = 511, message = "Author biography must be less than 512 characters")
+    @Schema(description = "Biography of the author", example = "British author best known for the Harry Potter series")
     private String biography;
 
     public Author(Long id, String name, String biography) {

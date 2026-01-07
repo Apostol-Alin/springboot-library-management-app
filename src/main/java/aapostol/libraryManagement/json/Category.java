@@ -4,6 +4,7 @@ import java.util.Set;
 
 import org.json.JSONObject;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,19 +21,23 @@ import jakarta.validation.constraints.Size;
 public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier of the Category", example = "1")
     private Long id;
 
     @Column(name = "Name", nullable = false, length = 100, unique = true)
     @NotBlank(message = "Category name cannot be blank")
     @NotNull(message = "Category name cannot be null")
     @Size(max = 100, message = "Category name must be less than 101 characters")
+    @Schema(description = "Name of the Category", example = "Science Fiction", maxLength = 100)
     private String name;
 
     @Column(name = "Description", nullable = true, length = 511)
     @Size(max = 511, message = "Category description must be less than 512 characters")
+    @Schema(description = "Description of the Category", example = "A category for science fiction books", maxLength = 511)
     private String description;
 
     @ManyToMany(mappedBy = "categories")
+    @Schema(description = "Books associated with this Category")
     private Set<Book> books;
 
     public Category() {

@@ -1,9 +1,11 @@
 package aapostol.libraryManagement.dto;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import org.json.JSONObject;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -16,30 +18,37 @@ public class BookRequest {
     @NotBlank(message = "Book title cannot be blank")
     @NotNull(message = "Book title cannot be null")
     @Size(max = 255, message = "Book title must be less than 256 characters")
+    @Schema(description = "Title of the book", example = "Harry Potter and the Philosopher's Stone")
     private String title;
 
     @Size(max = 511, message = "Book description must be less than 512 characters")
+    @Schema(description = "Description of the book", example = "A young wizard's journey begins.")
     private String description;
 
     @PastOrPresent(message = "Publication date cannot be in the future")
-    private Date publication_date;
+    @Schema(description = "Publication date of the book. Format must be yyyy-MM-dd", example = "1997-06-26")
+    private LocalDate publication_date;
 
     @Positive(message = "Total copies must be a positive integer")
+    @Schema(description = "Total number of copies of the book in the library.", example = "10")
     private Integer total_copies;
 
     @Positive(message = "Available copies must be a positive integer")
+    @Schema(description = "Number of copies of the book currently available in the library.", example = "7")
     private Integer available_copies;
 
+    @Schema(hidden = true)
     @AssertTrue(message = "Available copies must not exceed total copies")
     public boolean isavailable_copiesValid() {
         return available_copies <= total_copies;
     }
 
     @NotNull(message = "Author cannot be null")
+    @Schema(description = "ID of the author of the book", example = "1")
     private Long author_id;
 
     public BookRequest(){}
-    public BookRequest(String title, String description, Date publication_date, Integer total_copies, Integer available_copies, Long author_id) {
+    public BookRequest(String title, String description, LocalDate publication_date, Integer total_copies, Integer available_copies, Long author_id) {
         this.title = title;
         this.description = description;
         this.publication_date = publication_date;
@@ -54,7 +63,7 @@ public class BookRequest {
     public String getDescription() {
         return description;
     }
-    public Date getPublicationDate() {
+    public LocalDate getPublicationDate() {
         return publication_date;
     }
     public Integer getTotalCopies() {
@@ -72,7 +81,7 @@ public class BookRequest {
     public void setDescription(String description) {
         this.description = description;
     }
-    public void setPublicationDate(Date publication_date) {
+    public void setPublicationDate(LocalDate publication_date) {
         this.publication_date = publication_date;
     }
     public void setTotalCopies(Integer total_copies) {

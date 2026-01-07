@@ -1,16 +1,20 @@
 package aapostol.libraryManagement.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public class ReviewRequest {
     @NotNull(message = "Book ID cannot be null")
+    @Schema(description = "ID of the book being reviewed", example = "1")
     private Long book_id;
 
     @NotNull(message = "Client ID cannot be null")
+    @Schema(description = "ID of the client writing the review", example = "1")
     private Long client_id;
 
     @Size(max = 511, message = "Review text must be less than 512 characters")
+    @Schema(description = "Text of the review", example = "Great book, highly recommend!")
     private String review_text;
 
     public ReviewRequest() {}

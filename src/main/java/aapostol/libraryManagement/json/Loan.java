@@ -1,9 +1,10 @@
 package aapostol.libraryManagement.json;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.json.JSONObject;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -20,33 +21,39 @@ import jakarta.validation.constraints.NotNull;
 public class Loan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Schema(description = "Unique identifier of the loan", example = "1")
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "book_id", nullable = false)
     @NotNull(message = "Book cannot be null")
+    @Schema(description = "Book associated with the loan")
     private Book book;
 
     @ManyToOne
     @JoinColumn(name = "client_id", nullable = false)
     @NotNull(message = "Client cannot be null")
+    @Schema(description = "Client who borrowed the book")
     private Client client;
 
     @Column(name = "borrow_date", nullable = false)
     @NotNull(message = "Borrow date cannot be null")
-    private Date borrow_date;
+    @Schema(description = "Date when the book was borrowed", example = "2024-01-01")
+    private LocalDate borrow_date;
 
     @Column(name = "due_date", nullable = false)
     @NotNull(message = "Due date cannot be null")
     @Future(message = "Due date must be in the future")
-    private Date due_date;
+    @Schema(description = "Due date for returning the book", example = "2024-12-31")
+    private LocalDate due_date;
 
     @Column(name = "return_date")
-    private Date return_date;
+    @Schema(description = "Date when the book was returned", example = "2024-06-15")
+    private LocalDate return_date;
 
     public Loan() {}
 
-    public Loan(Book book, Client client, Date borrow_date, Date return_date, Date due_date) {
+    public Loan(Book book, Client client, LocalDate borrow_date, LocalDate return_date, LocalDate due_date) {
         this.book = book;
         this.client = client;
         this.borrow_date = borrow_date;
@@ -66,15 +73,15 @@ public class Loan {
         return client;
     }
 
-    public Date getBorrowDate() {
+    public LocalDate getBorrowDate() {
         return borrow_date;
     }
 
-    public Date getDueDate() {
+    public LocalDate getDueDate() {
         return due_date;
     }
 
-    public Date getReturnDate() {
+    public LocalDate getReturnDate() {
         return return_date;
     }
 
@@ -86,15 +93,15 @@ public class Loan {
         this.client = client;
     }
 
-    public void setBorrowDate(Date borrowDate) {
+    public void setBorrowDate(LocalDate borrowDate) {
         this.borrow_date = borrowDate;
     }
 
-    public void setDueDate(Date dueDate) {
+    public void setDueDate(LocalDate dueDate) {
         this.due_date = dueDate;
     }
 
-    public void setReturnDate(Date returnDate) {
+    public void setReturnDate(LocalDate returnDate) {
         this.return_date = returnDate;
     }
 
