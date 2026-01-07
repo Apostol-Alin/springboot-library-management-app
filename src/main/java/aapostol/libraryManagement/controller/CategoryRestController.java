@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aapostol.libraryManagement.dto.CategoryDescriptionRequest;
 import aapostol.libraryManagement.json.Book;
 import aapostol.libraryManagement.json.Category;
 import aapostol.libraryManagement.service.CategoryService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Size;
 
 @RestController
 @RequestMapping("/category-management/categories")
@@ -61,8 +61,8 @@ public class CategoryRestController {
     }
 
     @PatchMapping(value = "/description")
-    public ResponseEntity<Category> updateCategoryDescription(@RequestParam(value = "id") Long id, @RequestParam(value = "description") @Size(max = 511) String description) {
-        Category updatedCategory = this.categoryService.updateCategoryDescription(id, description);
+    public ResponseEntity<Category> updateCategoryDescription(@RequestParam(value = "id") Long id, @RequestBody @Valid CategoryDescriptionRequest descriptionRequest) {
+        Category updatedCategory = this.categoryService.updateCategoryDescription(id, descriptionRequest.getDescription());
         return ResponseEntity.status(HttpStatus.OK).body(updatedCategory);
     }
 

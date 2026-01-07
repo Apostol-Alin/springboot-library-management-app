@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import aapostol.libraryManagement.dto.BiographyRequest;
 import aapostol.libraryManagement.json.Author;
 import aapostol.libraryManagement.service.AuthorService;
 import jakarta.validation.Valid;
@@ -60,8 +61,8 @@ public class AuthorRestController {
     }
 
     @PatchMapping(value = "/biography")
-    public ResponseEntity<Author> updateAuthorBiography(@RequestParam(value = "id") Long id, @RequestParam(value = "biography") @Size(max = 511) String biography) {
-        Author updatedAuthor = this.authorService.updateAuthorBiography(id, biography);
+    public ResponseEntity<Author> updateAuthorBiography(@RequestParam(value = "id") Long id, @RequestBody @Valid BiographyRequest biographyRequest) {
+        Author updatedAuthor = this.authorService.updateAuthorBiography(id, biographyRequest.getBiography());
         return ResponseEntity.status(HttpStatus.OK).body(updatedAuthor);
     }
 
